@@ -2,16 +2,15 @@ version: "3.1"
 services:
   db:
     image: influxdb:1.2.4
-    command: -config /etc/influxdb/influxdb.conf
+    environment:
+      - INFLUXDB_ADMIN_ENABLED=true
     ports:
-      - 8083:8083
       - 8086:8086
+      - 8083:8083
     volumes:
-      - ./influxdb.conf:/etc/influxdb/influxdb.conf:ro
       - influxdata:/var/lib/influxdb
   api:
     image: bkake/iot-api:v1
-    build: ./iot-api
     command: npm start
     ports:
       - 1337:1337

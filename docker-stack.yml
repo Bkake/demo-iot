@@ -1,0 +1,51 @@
+version: "3.1"
+services:
+  db:
+    image: influxdb:1.2.4
+    environment:
+      - INFLUXDB_ADMIN_ENABLED=true
+    ports:
+      - 8086:8086
+      - 8083:8083
+    volumes:
+      - influxdata:/var/lib/influxdb
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure
+  api:
+    image: bkake/iot-api:v1
+    command: npm start
+    ports:
+      - 1337:1337
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure  
+  dashboard:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 2
+      restart_policy:
+        condition: on-failure
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    stop_grace_period: 1m30s
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+volumes:
+  influxdata:

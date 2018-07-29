@@ -1,0 +1,22 @@
+{
+  "name": "iot-demo",
+  "version": "1.0.0",
+  "description": "Iot demo project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "./node_modules/.bin/mocha test/functional.js"
+  },
+  "author": "Bangaly Kake",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "influx": "^5.0.7",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
+  }
+}

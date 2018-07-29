@@ -5,10 +5,11 @@
 version: 2
 jobs:
   build:
+    db:
+      - image: influxdb:1.2.4
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
-      - image: influxdb:1.2.4
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -35,5 +36,17 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run: npm test
+      - run: /bin/sh -c 'curl -i -XPOST http://db:8086/query --data-urlencode "q=CREATE DATABASE iot" && npm test'
 
+  deploy:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      # Docker is preinstalled, along with docker-compose
+      - checkout
+    steps:
+      - run: |
+         docker build --rm=false -t bkake/iot-api:$CIRCLE_BRANCH .
+         docker tag bkake/iot-api:$CIRCLE_BRANCH bkake/iot-api:$CIRCLE_SHA1
+         docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+         docker push bkake/iot-api:$CIRCLE_BRANCH

@@ -34,7 +34,9 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
         
       # run tests!
-      - run:  docker-compose -f ../docker-compose.test.yml up --build 
+      - run: |
+          docker-compose -f ../compose.test.yml build sut
+          docker-compose -f ../compose-test.yml run sut
          
       - deploy:
           name: Push application Docker image

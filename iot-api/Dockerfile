@@ -1,6 +1,9 @@
 FROM mhart/alpine-node:6.11.0
 ENV LAST_UPDATED 20170624T180000
 
+# Installation curl
+RUN apk add -U curl
+
 # Copie des dependences du serveur
 COPY package.json /tmp/package.json
 

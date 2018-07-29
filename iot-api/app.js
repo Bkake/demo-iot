@@ -8,8 +8,8 @@ const express    = require('express'),
 let app = module.exports = express();
 
 // Create a client towards InfluxDB
-let influx = new Influx.InfluxDB({
-    host: process.env.INFLUXDB_HOST,
+ let influx = new Influx.InfluxDB({
+    host: process.env.INFLUXDB_HOST || "db",
     database: 'iot'
  });
 
